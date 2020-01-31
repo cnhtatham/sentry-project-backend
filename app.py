@@ -12,7 +12,6 @@ __mongo_client = pymongo.MongoClient( 'localhost:27017', connect=False )
 __mongo_database = __mongo_client['sentry-test']
 
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -32,13 +31,35 @@ def get_projects():
     
     return json.dumps(projects), 200, {'Access-Control-Allow-Origin' : '*'}
 
-@socketio.on('connect')
-def connect():
-    print('connection established')
 
-@socketio.on('/create-project')
-def create_project( payload ):
-    emit('received')
+@app.route('/get_activities')
+def get_activities():
+    activities = {
+        'activities' : list( __mongo_database['activity'].find() )
+    }
+
+    for p in activities['activities']:
+        p.update({
+            '_id' : str( p['_id'] ),
+            'datetime' : str( p['datetime'] )
+        })
+
+    
+    return json.dumps(activities), 200, {'Access-Control-Allow-Origin' : '*'}
+
+
+@app.route('/add_project', methods=['POST'])
+def add_project():
+    __mongo_database['project'].insert_one(request.data['project'])
+    return {'success' : True}
+
+# @socketio.on('connect')
+# def connect():
+#     print('connection established')
+
+# @socketio.on('/create-project')
+# def create_project( payload ):
+#     emit('received')
 
 
     
