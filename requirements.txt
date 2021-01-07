@@ -41,7 +41,7 @@ itsdangerous==1.1.0
 Jinja2==2.10
 jmespath==0.9.4
 kombu==4.6.3
-lxml==4.2.5
+lxml==4.6.2
 MarkupSafe==1.1.0
 marshmallow==3.3.0
 marshmallow-polyfield==5.7
